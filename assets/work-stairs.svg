@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="a" x2="0" y2="1"><stop stop-color="#d8a16c"/><stop offset="1" stop-color="#8f3227"/></linearGradient><pattern id="p" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".7" fill="#5b3326" opacity=".22"/></pattern></defs>
+  <rect width="800" height="600" fill="url(#a)"/><circle cx="574" cy="146" r="82" fill="#edc58e"/>
+  <path d="M0 383 175 241l163 102 161-175 301 207v225H0Z" fill="#802b24"/>
+  <path d="M0 433h157v-43h134v-51h138v-52h130v-47h105v-54h136v414H0Z" fill="#382522"/>
+  <path d="M0 434h157m-157 57h157m-157 56h157m-23-166v166m157-202h134m-134 59h134m-134 59h134m-134 58h134m-24-176v176m162-227h130m-130 58h130m-130 58h130m-130 58h130m-18-174v174" fill="none" stroke="#d9a36c" stroke-width="3" opacity=".76"/>
+  <path d="M0 568q115-43 218 0t229 0q131-40 353 0" fill="none" stroke="#f0ce99" stroke-width="4"/>
+  <rect width="800" height="600" fill="url(#p)"/><text x="55" y="91" fill="#fff0d6" font-family="serif" font-size="20" letter-spacing="8">阶梯上的日与夜</text>
+</svg>

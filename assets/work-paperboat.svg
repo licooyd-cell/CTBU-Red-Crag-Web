@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="h" x2="1" y2="1"><stop stop-color="#e2bc8e"/><stop offset="1" stop-color="#a65a43"/></linearGradient><pattern id="p" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".7" fill="#3c3028" opacity=".18"/></pattern></defs>
+  <rect width="800" height="600" fill="url(#h)"/><circle cx="602" cy="160" r="66" fill="#f3d9aa"/>
+  <path d="M0 356 155 267l106 55 131-166 146 159 88-76 174 114v247H0Z" fill="#7d4538"/>
+  <path d="M0 419q122-34 235 0t231 0q152-37 334 0v181H0Z" fill="#71817b"/>
+  <path d="M0 462q139-25 265 0t258 0q128-26 277 0m-800 52q125-25 244 0t261 0q130-27 295 0" fill="none" stroke="#f0d6ac" stroke-width="4" opacity=".76"/>
+  <path d="m335 331 151 0-61 54h-47Z" fill="#f5e5c7"/><path d="m336 331 63 30v-99Z" fill="#b44b39"/><path d="m399 361 87-30-63 54h-24Z" fill="#d2a55f"/>
+  <path d="M402 362v47" stroke="#f6e9cc" stroke-width="3" stroke-dasharray="5 7"/>
+  <rect width="800" height="600" fill="url(#p)"/><text x="52" y="90" fill="#fff0d8" font-family="serif" font-size="20" letter-spacing="8">纸船经过的地方</text>
+</svg>

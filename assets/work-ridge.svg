@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="g" x2="0" y2="1"><stop stop-color="#c5a27c"/><stop offset="1" stop-color="#77816a"/></linearGradient><pattern id="p" width="8" height="8" patternUnits="userSpaceOnUse"><path d="m0 0 8 8" stroke="#27362d" stroke-opacity=".21"/></pattern></defs>
+  <rect width="800" height="600" fill="url(#g)"/><circle cx="613" cy="161" r="63" fill="#e6c793"/>
+  <path d="m0 400 163-141 93 86 178-206 165 196 85-92 116 101v256H0Z" fill="#59684f"/>
+  <path d="m0 487 190-87 140 53 187-83 128 57 155-53v226H0Z" fill="#42543f"/>
+  <path d="m-30 590 184-190m89 200 171-167m72 180 163-160m-487-1 48 35m166-17 49 34m156-21 53 40" fill="none" stroke="#deca9e" stroke-width="5"/>
+  <path d="M160 398v-64m-11 0h23m-12 0-19-28m19 28 20-29m157 117v-60m-12 0h25m-13 0-17-23m17 23 19-25m202 18v-51m-11 0h22m-11 0-16-21m16 21 17-22" stroke="#d4c196" stroke-width="4"/>
+  <rect width="800" height="600" fill="url(#p)"/><text x="53" y="91" fill="#f3ecd7" font-family="serif" font-size="20" letter-spacing="8">路过山脊</text>
+</svg>

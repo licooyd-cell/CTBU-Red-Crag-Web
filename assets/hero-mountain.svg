@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#ad4a34"/><stop offset="1" stop-color="#77241f"/></linearGradient>
+    <pattern id="grid" width="38" height="38" patternUnits="userSpaceOnUse"><path d="M38 0H0V38" fill="none" stroke="#f1d9b6" stroke-opacity=".13"/></pattern>
+  </defs>
+  <rect width="900" height="700" fill="url(#sky)"/>
+  <rect width="900" height="700" fill="url(#grid)"/>
+  <circle cx="650" cy="170" r="85" fill="#e9b879" fill-opacity=".92"/>
+  <path d="M0 400 180 288l77 47 125-151 171 182 91-116 256 189v261H0Z" fill="#67241f"/>
+  <path d="m0 445 158-93 84 58 122-72 132 96 139-95 121 63 144-85v383H0Z" fill="#832c25"/>
+  <path d="m0 519 160-62 111 42 100-53 145 77 103-65 129 44 152-43v241H0Z" fill="#541e1b"/>
+  <path d="M52 501V345h52v156m18 0V299h67v202m18 0V365h47v136m420 0V307h66v194m18 0V347h47v154m14 0V282h72v219m-587 0V406h53v95" fill="#37211d"/>
+  <path d="M0 557q160-45 294 0t281 0q153-40 325 0" fill="none" stroke="#d4aa73" stroke-width="5" stroke-opacity=".68"/>
+  <path d="M0 580q170-39 329 0t276 0q144-35 295 0" fill="none" stroke="#d4aa73" stroke-width="2" stroke-opacity=".5"/>
+  <path d="M718 340v164m21-164v164m-45-117h69m-69 31h69m-69 31h69" stroke="#e1bb88" stroke-width="4" stroke-opacity=".7"/>
+  <text x="58" y="620" fill="#f1ddbd" font-family="serif" font-size="18" letter-spacing="9">重庆 · 山城记忆</text>
+</svg>

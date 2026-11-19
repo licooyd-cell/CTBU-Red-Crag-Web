@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="f" x2="0" y2="1"><stop stop-color="#d39a67"/><stop offset=".65" stop-color="#845247"/><stop offset="1" stop-color="#3e4543"/></linearGradient><pattern id="p" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r=".7" fill="#fff" opacity=".25"/></pattern></defs>
+  <rect width="800" height="600" fill="url(#f)"/><circle cx="602" cy="172" r="67" fill="#f0d19c"/>
+  <path d="M0 361 144 290l115 49 154-145 126 116 111-57 150 72v122H0Z" fill="#4a4941"/>
+  <path d="M95 297h524v20H95Zm28 20v90m469-90v90" stroke="#382f2a" stroke-width="8"/>
+  <path d="M0 428h800v172H0Z" fill="#46524d"/><path d="M0 466q123-23 239 0t259 0q142-24 302 0m-800 55q119-23 245 0t259 0q133-23 296 0" fill="none" stroke="#d1ac7d" stroke-width="3" opacity=".6"/>
+  <path d="M334 405V269m-18 18h36l-4 63h-28Z" fill="#ead39f" stroke="#573e32" stroke-width="5"/><path d="M329 298h19m-20 15h20m-21 15h21" stroke="#8e4935" stroke-width="2"/>
+  <path d="M187 412v-41m-10 7q10-21 20 0m-9 34v-34" stroke="#322a27" stroke-width="7"/><circle cx="188" cy="363" r="8" fill="#302b27"/>
+  <rect width="800" height="600" fill="url(#p)"/><text x="52" y="89" fill="#fff0d8" font-family="serif" font-size="20" letter-spacing="8">等一班慢慢来的车</text>
+</svg>

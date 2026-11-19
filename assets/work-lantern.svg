@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="e" x2="0" y2="1"><stop stop-color="#b77554"/><stop offset="1" stop-color="#493331"/></linearGradient><pattern id="p" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 0 8 8" stroke="#f7dec0" stroke-opacity=".11"/></pattern></defs>
+  <rect width="800" height="600" fill="url(#e)"/><path d="M0 393 163 280l100 60 136-183 123 143 84-72 194 140v232H0Z" fill="#533533"/>
+  <path d="M59 428V218h154v210m21 0V152h179v276m31 0V250h185v178m22 0V194h94v234" fill="#6b4236"/>
+  <path d="M61 272h150m-150 77h150m23-131h173m-173 76h173m-173 76h173m18-111h177m-177 76h177m18-79h92m-92 79h92" stroke="#cc9d68" stroke-width="5" opacity=".68"/>
+  <path d="M317 156h84m-74-22h64m-49-20h34m-17 42v72" stroke="#edc879" stroke-width="4"/>
+  <path d="M335 154h47l-7 54h-33Z" fill="#f0c66f"/><path d="M347 168h22m-22 12h22m-22 12h22" stroke="#a76038" stroke-width="2"/>
+  <path d="M0 506q125-45 255 0t256 0q155-49 289 0" fill="none" stroke="#d59b67" stroke-width="4"/>
+  <rect width="800" height="600" fill="url(#p)"/><text x="53" y="90" fill="#f8e9d1" font-family="serif" font-size="20" letter-spacing="8">留一盏灯给街巷</text>
+</svg>

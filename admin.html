@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#8f2922" />
+    <title>管理后台 · 红岩新声</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="admin.css" />
+    <script src="supabase-config.js"></script>
+    <script type="module" src="admin.js"></script>
+  </head>
+  <body class="admin-page">
+    <div class="page-grain" aria-hidden="true"></div>
+    <header class="site-header admin-header">
+      <a class="brand" href="./" aria-label="返回红岩新声首页">
+        <span class="brand-mark" aria-hidden="true">岩</span>
+        <span class="brand-copy"><strong>红岩新声</strong><small>创作档案管理</small></span>
+      </a>
+      <a class="nav-link" href="./">返回公开展览 <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main class="admin-main">
+      <section class="admin-heading">
+        <p class="eyebrow">ADMINISTRATION <i></i> 管理员工作台</p>
+        <h1>作品档案管理</h1>
+        <p>管理参赛者资料、作品故事与展览图片。</p>
+      </section>
+
+      <section class="admin-card setup-warning" id="setup-warning" hidden>
+        <h2>后台尚未连接</h2>
+        <p>请按项目 README 中的“Supabase 管理后台”步骤完成数据库与站点配置后再登录。</p>
+      </section>
+
+      <section class="admin-card login-card" id="login-panel" hidden>
+        <h2>管理员登录</h2>
+        <p>请使用已授权的管理员邮箱和密码登录。</p>
+        <form id="login-form" class="admin-form login-form">
+          <label>管理员邮箱<input name="email" type="email" autocomplete="username" required /></label>
+          <label>密码<input name="password" type="password" autocomplete="current-password" required /></label>
+          <button class="button button-dark" type="submit">登录管理后台 <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="admin-message" id="login-message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="admin-dashboard" id="dashboard" hidden>
+        <div class="dashboard-toolbar">
+          <div>
+            <p class="eyebrow">PARTICIPANTS <i></i> 参赛者名录</p>
+            <h2>作品与故事</h2>
+          </div>
+          <div class="dashboard-actions">
+            <span class="admin-email" id="admin-email"></span>
+            <button type="button" class="button button-outline" id="logout-button">退出登录</button>
+            <button type="button" class="button button-dark" id="add-button">＋ 新增参赛者</button>
+          </div>
+        </div>
+        <p class="admin-message" id="dashboard-message" role="status" aria-live="polite"></p>
+        <div class="admin-list" id="participant-list"></div>
+      </section>
+    </main>
+
+    <dialog class="admin-dialog" id="participant-dialog" aria-labelledby="form-title">
+      <div class="admin-dialog-heading">
+        <div><p class="eyebrow">PARTICIPANT FILE</p><h2 id="form-title">新增参赛者</h2></div>
+        <button type="button" class="dialog-close" id="form-close" aria-label="关闭编辑窗口">×</button>
+      </div>
+      <form id="participant-form" class="admin-form">
+        <input type="hidden" name="id" />
+        <div class="form-grid">
+          <label>姓名<input name="name" maxlength="80" required /></label>
+          <label>学号<input name="studentId" maxlength="80" required /></label>
+          <label>院系 / 专业<input name="department" maxlength="120" required /></label>
+          <label>作品类别<input name="category" maxlength="80" required /></label>
+          <label class="form-wide">作品名称<input name="title" maxlength="180" required /></label>
+          <label class="form-wide">一句话寄语<input name="quote" maxlength="240" required /></label>
+          <label class="form-wide">作品简介<textarea name="description" rows="2" maxlength="500" required></textarea></label>
+          <label class="form-wide">个人简介<textarea name="bio" rows="2" maxlength="500" required></textarea></label>
+          <label class="form-wide">创作故事<textarea name="story" rows="5" maxlength="5000" required></textarea></label>
+          <label>头像点缀色
+            <select name="accent">
+              <option value="vermilion">朱红</option>
+              <option value="ochre">赭黄</option>
+              <option value="olive">橄榄</option>
+              <option value="moss">苔绿</option>
+            </select>
+          </label>
+          <label>作品封面（JPG / PNG / WebP，最大 10 MB）
+            <input name="coverFile" type="file" accept="image/jpeg,image/png,image/webp" />
+          </label>
+          <div class="cover-preview form-wide" id="cover-preview" hidden></div>
+        </div>
+        <p class="admin-message" id="form-message" role="status" aria-live="polite"></p>
+        <div class="form-actions">
+          <button type="button" class="button button-outline" id="cancel-button">取消</button>
+          <button type="submit" class="button button-dark" id="save-button">保存参赛者</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="admin-toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

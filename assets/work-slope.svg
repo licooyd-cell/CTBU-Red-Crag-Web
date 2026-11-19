@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="c" x2="0" y2="1"><stop stop-color="#d4b68c"/><stop offset="1" stop-color="#77806b"/></linearGradient><pattern id="p" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".8" fill="#23352d" opacity=".2"/></pattern></defs>
+  <rect width="800" height="600" fill="url(#c)"/><circle cx="613" cy="151" r="72" fill="#efd29e"/>
+  <path d="M0 364 165 234l129 88 143-138 147 140 99-73 117 88v261H0Z" fill="#55644f"/>
+  <path d="M-45 604 177 360h97L67 604m176 0 195-234h83L369 604m187 0 159-192h91L680 604" fill="#e5d6b8"/>
+  <path d="m-20 558 245-222m49 208 190-223m104 224 167-193" stroke="#a27e57" stroke-width="8"/>
+  <path d="M64 365v-93h35v68m495 20v-120h48v90m91 38v-85h38v65" fill="#39483d"/>
+  <rect width="800" height="600" fill="url(#p)"/><text x="52" y="92" fill="#f8efd9" font-family="serif" font-size="20" letter-spacing="8">坡坡慢行</text>
+</svg>

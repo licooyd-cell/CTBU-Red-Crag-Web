@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="d" x2="1" y2="1"><stop stop-color="#e5c9a0"/><stop offset="1" stop-color="#a68162"/></linearGradient><pattern id="p" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r=".7" fill="#45392a" opacity=".16"/></pattern></defs>
+  <rect width="800" height="600" fill="url(#d)"/><path d="M94 61h615v430H94z" fill="#f1e4ca"/><path d="M110 77h279v398H110zm300 0h283v398H410z" fill="#9ea58b"/><path d="M382 60h28v435h-28M93 280h617v27H93" fill="#6d4938"/>
+  <circle cx="554" cy="173" r="54" fill="#efd090"/><path d="m420 341 69-109 52 75 54-45 65 104v109H410Z" fill="#67735a"/>
+  <path d="M0 490h800v110H0Z" fill="#714c39"/><path d="M89 488q-50-80 2-130 44 42 14 114m88 16q-38-101 23-150 38 62-4 147m63-11q-13-77 49-104 23 62-26 112" fill="#66734f"/>
+  <path d="M139 490v-104m79 99v-99m66 104v-80" stroke="#5d4834" stroke-width="7"/>
+  <rect width="800" height="600" fill="url(#p)"/><text x="53" y="552" fill="#f4e6cc" font-family="serif" font-size="20" letter-spacing="8">窗边长出春天</text>
+</svg>

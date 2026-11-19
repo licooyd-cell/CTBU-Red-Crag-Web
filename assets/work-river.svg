@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="b" x2="0" y2="1"><stop stop-color="#dba867"/><stop offset=".55" stop-color="#bc7455"/><stop offset="1" stop-color="#6b3735"/></linearGradient><pattern id="p" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M0 9 9 0" stroke="#fff1d2" stroke-opacity=".16"/></pattern></defs>
+  <rect width="800" height="600" fill="url(#b)"/><circle cx="570" cy="189" r="68" fill="#f0d09a"/>
+  <path d="M0 340 117 288l106 51 115-132 109 118 91-48 103 68 159-86v150H0Z" fill="#593b38"/>
+  <path d="M0 407q100-32 202 0t213 0q145-35 385 0v193H0Z" fill="#59706b"/>
+  <path d="M0 454q90-22 187 0t208 0q124-25 405 0m-800 52q130-21 245 0t231 0q124-22 324 0m-800 49q132-22 253 0t226 0q132-23 321 0" fill="none" stroke="#e7d0a6" stroke-width="3" opacity=".68"/>
+  <path d="M64 274v-73h41v73m15 0v-97h52v97m412-30v-76h43v76m16 0V120h54v124m18 0v-95h40v95" fill="#453534"/>
+  <rect width="800" height="600" fill="url(#p)"/><text x="53" y="92" fill="#fff1d9" font-family="serif" font-size="20" letter-spacing="8">江岸来信</text>
+</svg>
