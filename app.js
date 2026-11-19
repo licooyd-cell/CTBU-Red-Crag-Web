@@ -10,8 +10,115 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
   const resultsNote = document.getElementById("results-note");
   const emptyState = document.getElementById("empty-state");
   const dialog = document.getElementById("qr-dialog");
+  const entryDialog = document.getElementById("entry-dialog");
+  const entryChoices = document.getElementById("entry-choices");
+  const entryAdminForm = document.getElementById("entry-admin-form");
+  const entryMessage = document.getElementById("entry-message");
+  const entryIntro = document.getElementById("entry-intro");
+  const entryAdminSubmit = document.getElementById("entry-admin-submit");
+  const entryRoleKey = "hongyan-entry-role";
+  let authClient;
   let selectedCategory = "全部作品";
   let toastTimer;
+
+  const setEntryMessage = (message) => {
+    if (entryMessage) entryMessage.textContent = message;
+  };
+
+  const describeEntryError = (error) => {
+    const message = String(error?.message || error || "").toLowerCase();
+    if (message.includes("invalid login credentials")) return "邮箱或密码不正确。";
+    if (message.includes("email not confirmed")) return "该邮箱尚未确认，请联系项目管理员。";
+    if (message.includes("failed to fetch") || message.includes("network")) return "暂时无法连接登录服务，请稍后重试。";
+    return error?.message || "登录失败，请稍后重试。";
+  };
+
+  const hasChosenEntryRole = () => {
+    try {
+      return Boolean(window.localStorage.getItem(entryRoleKey));
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const rememberEntryRole = (role) => {
+    try {
+      window.localStorage.setItem(entryRoleKey, role);
+    } catch (error) {
+      // Private browsing or a strict browser policy may disable localStorage.
+    }
+  };
+
+  const showAdminEntry = () => {
+    entryChoices.hidden = true;
+    entryAdminForm.hidden = false;
+    entryIntro.textContent = "请输入 Supabase 中已创建并获管理员授权的账号。";
+    setEntryMessage("");
+    entryAdminForm.elements.email.focus();
+  };
+
+  const showEntryChoices = () => {
+    entryChoices.hidden = false;
+    entryAdminForm.hidden = true;
+    entryIntro.textContent = "请选择访问方式，开始浏览青年创作。";
+    entryAdminForm.reset();
+    setEntryMessage("");
+  };
+
+  const verifyEntryAdmin = async (session) => {
+    const { data, error } = await authClient
+      .from("admin_users")
+      .select("user_id")
+      .eq("user_id", session.user.id)
+      .maybeSingle();
+    if (error) throw error;
+    if (!data) {
+      await authClient.auth.signOut();
+      throw new Error("此账号尚未获管理员授权，请联系项目管理员。 ");
+    }
+  };
+
+  const submitAdminEntry = async (event) => {
+    event.preventDefault();
+    entryAdminSubmit.disabled = true;
+    setEntryMessage("正在验证管理员账号…");
+
+    try {
+      if (!isSupabaseConfigured()) {
+        throw new Error("Supabase 尚未配置，暂时无法进行管理员登录。 ");
+      }
+      authClient ||= await createSupabaseClient();
+      const values = new FormData(entryAdminForm);
+      const { data, error } = await authClient.auth.signInWithPassword({
+        email: String(values.get("email") || "").trim(),
+        password: values.get("password"),
+      });
+      if (error) throw error;
+      if (!data.session) throw new Error("登录服务没有返回有效会话，请稍后重试。 ");
+      await verifyEntryAdmin(data.session);
+      rememberEntryRole("admin");
+      setEntryMessage("登录成功，正在进入管理后台…");
+      window.location.assign("admin.html");
+    } catch (error) {
+      setEntryMessage(describeEntryError(error));
+    } finally {
+      entryAdminSubmit.disabled = false;
+    }
+  };
+
+  const setupEntryGate = () => {
+    if (!entryDialog || hasChosenEntryRole()) return;
+    entryDialog.showModal();
+  };
+
+  document.getElementById("guest-entry")?.addEventListener("click", () => {
+    rememberEntryRole("guest");
+    entryDialog.close();
+  });
+  document.getElementById("admin-entry")?.addEventListener("click", showAdminEntry);
+  document.getElementById("entry-back")?.addEventListener("click", showEntryChoices);
+  entryAdminForm?.addEventListener("submit", submitAdminEntry);
+  entryDialog?.addEventListener("cancel", (event) => event.preventDefault());
 
   const escapeHtml = (value) =>
     String(value).replace(/[&<>"']/g, (character) => {
@@ -229,5 +336,6 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
     }
   };
 
+  setupEntryGate();
   void initialize();
 })();

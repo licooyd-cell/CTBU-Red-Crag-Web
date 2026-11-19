@@ -10,7 +10,7 @@
 python -m http.server 8000
 ```
 
-访问 `http://localhost:8000`。未配置 Supabase 时，首页会显示演示资料；管理员入口会提示完成配置。
+访问 `http://localhost:8000`。用户首次进入首页时会先选择“游客登录”或“管理员登录”：游客可直接浏览作品；管理员需要使用 Supabase Authentication 中已创建、并写入 `public.admin_users` 的账号登录。选择结果会保存在当前浏览器中，之后可直接进入首页；管理员也可以从页脚的“管理员入口”进入后台。
 
 ## Supabase 管理后台配置
 

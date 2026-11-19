@@ -123,6 +123,35 @@
       <p class="qr-error" id="qr-error" role="status" hidden></p>
     </dialog>
 
+    <dialog class="entry-dialog" id="entry-dialog" aria-labelledby="entry-title">
+      <div class="entry-dialog-content">
+        <p class="eyebrow">WELCOME TO HONGYAN</p>
+        <h2 id="entry-title">欢迎进入红岩新声</h2>
+        <p class="entry-intro" id="entry-intro">请选择访问方式，开始浏览青年创作。</p>
+
+        <div class="entry-choices" id="entry-choices">
+          <button class="entry-choice entry-choice-primary" id="guest-entry" type="button">
+            <strong>游客登录 <span aria-hidden="true">→</span></strong>
+            <small>直接进入网页观看作品</small>
+          </button>
+          <button class="entry-choice" id="admin-entry" type="button">
+            <strong>管理员登录 <span aria-hidden="true">→</span></strong>
+            <small>使用 Supabase 已授权账号</small>
+          </button>
+        </div>
+
+        <form class="entry-admin-form" id="entry-admin-form" hidden>
+          <button class="entry-back" id="entry-back" type="button">← 返回选择</button>
+          <label>管理员邮箱<input name="email" type="email" autocomplete="username" required /></label>
+          <label>登录密码<input name="password" type="password" autocomplete="current-password" required /></label>
+          <button class="button button-dark" id="entry-admin-submit" type="submit">登录管理后台 <span aria-hidden="true">→</span></button>
+          <p class="entry-message" id="entry-message" role="status" aria-live="polite"></p>
+        </form>
+
+        <p class="entry-note">管理员账号需要在 Supabase Authentication 中创建，并加入 <code>public.admin_users</code> 授权表。</p>
+      </div>
+    </dialog>
+
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </body>
 </html>
