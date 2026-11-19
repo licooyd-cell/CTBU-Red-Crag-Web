@@ -21,6 +21,18 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
   let selectedCategory = "全部作品";
   let toastTimer;
 
+  const preparePhotoReveal = (root) => {
+    root.querySelectorAll("img[data-photo-reveal]").forEach((image) => {
+      const reveal = () => image.classList.add("is-loaded");
+      if (image.complete) {
+        window.requestAnimationFrame(reveal);
+      } else {
+        image.addEventListener("load", reveal, { once: true });
+        image.addEventListener("error", reveal, { once: true });
+      }
+    });
+  };
+
   const setEntryMessage = (message) => {
     if (entryMessage) entryMessage.textContent = message;
   };
@@ -160,12 +172,12 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
       .map(
         (person, index) => `
           <article class="work-card">
-            <a class="card-art ${escapeHtml(person.accent)}" href="?id=${encodeURIComponent(person.id)}" aria-label="查看 ${escapeHtml(person.name)} 的作品：${escapeHtml(person.title)}">
-              <img src="${escapeHtml(person.cover)}" alt="${escapeHtml(person.title)}作品插画" loading="lazy" />
+            <a class="card-art ${escapeHtml(person.accent)}" style="--reveal-delay:${index * 90}ms" href="?id=${encodeURIComponent(person.id)}" aria-label="查看 ${escapeHtml(person.name)} 的作品：${escapeHtml(person.title)}">
+              <img data-photo-reveal src="${escapeHtml(person.cover)}" alt="${escapeHtml(person.title)}作品插画" loading="lazy" />
               <span class="card-number">${String(index + 1).padStart(2, "0")} <i>/</i> ${String(participants.length).padStart(2, "0")}</span>
               <span class="card-category">${escapeHtml(person.category)}</span>
             </a>
-            <div class="card-body">
+            <div class="card-body" style="--reveal-delay:${index * 90}ms">
               <div class="card-person">
                 <span class="avatar ${escapeHtml(person.accent)}" aria-hidden="true">${escapeHtml(person.name.slice(0, 1))}</span>
                 <div><h3>${escapeHtml(person.name)}</h3><span>${escapeHtml(person.department)} <i>·</i> ${escapeHtml(person.studentId)}</span></div>
@@ -178,6 +190,8 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
           </article>`,
       )
       .join("");
+
+    preparePhotoReveal(grid);
 
     resultsNote.textContent = query || selectedCategory !== "全部作品" ? `找到 ${visible.length} 件作品` : "";
     emptyState.hidden = visible.length > 0;
@@ -211,13 +225,14 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
           <p class="detail-description">${escapeHtml(person.description)}</p>
           <div class="detail-meta"><span class="avatar ${escapeHtml(person.accent)}" aria-hidden="true">${escapeHtml(person.name.slice(0, 1))}</span><div><strong>${escapeHtml(person.name)}</strong><span>${escapeHtml(person.department)}　·　${escapeHtml(person.studentId)}</span></div></div>
         </div>
-        <div class="detail-art ${escapeHtml(person.accent)}"><img src="${escapeHtml(person.cover)}" alt="${escapeHtml(person.title)}作品插画" /><span class="detail-art-label">SELECTED WORK <i>✳</i></span></div>
+        <div class="detail-art ${escapeHtml(person.accent)}"><img data-photo-reveal src="${escapeHtml(person.cover)}" alt="${escapeHtml(person.title)}作品插画" /><span class="detail-art-label">SELECTED WORK <i>✳</i></span></div>
       </section>
       <section class="story-section">
         <div class="story-heading"><p class="eyebrow">BEHIND THE WORK <span>—</span> 创作手记</p><h2>每个故事，<br /><em>都从生活开始。</em></h2><button class="button button-outline" type="button" data-action="qr" data-id="${escapeHtml(person.id)}">查看专属二维码 <span aria-hidden="true">▦</span></button></div>
         <div class="story-content"><p class="story-lead">${escapeHtml(person.bio)}</p><span class="story-divider"></span><p>${escapeHtml(person.story)}</p><div class="story-signature"><span>创作者</span><strong>${escapeHtml(person.name)}</strong></div></div>
       </section>
       <section class="detail-footer"><a href="./" class="text-link"><span aria-hidden="true">←</span> 返回全部作品</a><span>RED ROCK · YOUTH CREATIVE ARCHIVE</span><button class="text-link share-link" type="button" data-action="copy" data-id="${escapeHtml(person.id)}">复制作品链接 <span aria-hidden="true">↗</span></button></section>`;
+    preparePhotoReveal(app);
   };
 
   const showToast = (message) => {
