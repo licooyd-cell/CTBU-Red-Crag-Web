@@ -20,7 +20,7 @@ async function initializeHero() {
   let modules;
   try {
     modules = await Promise.race([
-      Promise.all([import("three"), import("three/addons/environments/RoomEnvironment.js")]),
+      Promise.all([import("three"), import("three/addons/environments/RoomEnvironment.js"), import("./3d.js")]),
       new Promise((_, reject) => {
         importTimer = window.setTimeout(() => reject(new Error("3D import timed out")), 10000);
       }),
@@ -30,7 +30,7 @@ async function initializeHero() {
   }
   if (!mount.isConnected) return;
 
-  const [THREE, { RoomEnvironment }] = modules;
+  const [THREE, { RoomEnvironment }, { createHongyanMonument }] = modules;
   const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const smallScreen = window.matchMedia("(max-width: 767px)");
   const weakDevice = Number(navigator.hardwareConcurrency) > 0 && navigator.hardwareConcurrency <= 4;
@@ -107,8 +107,8 @@ async function initializeHero() {
     const delta = lastTime ? Math.min((now - lastTime) / 1000, .05) : 0;
     lastTime = now;
     elapsed += delta;
-    model.rotation.y = -.3 + Math.sin(elapsed * Math.PI * 2 / 12) * THREE.MathUtils.degToRad(2);
-    model.rotation.x = .08 + Math.sin(elapsed * Math.PI * 2 / 12) * THREE.MathUtils.degToRad(1);
+    model.rotation.y = -.12 + Math.sin(elapsed * Math.PI * 2 / 16) * THREE.MathUtils.degToRad(1);
+    model.rotation.x = Math.sin(elapsed * Math.PI * 2 / 16) * THREE.MathUtils.degToRad(.25);
     // Equivalent to lerp(.05) at 60fps, independent of refresh rate.
     offset.lerp(target, 1 - Math.pow(.95, delta * 60));
     camera.setViewOffset(width, height, offset.x, offset.y, width, height);
@@ -121,7 +121,7 @@ async function initializeHero() {
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.35;
+    renderer.toneMappingExposure = 1.5;
     renderer.domElement.setAttribute("aria-hidden", "true");
     renderer.domElement.style.pointerEvents = "none";
     renderer.debug.onShaderError = () => { throw new Error("Hero shader compilation failed"); };
@@ -131,8 +131,8 @@ async function initializeHero() {
     });
 
     camera = new THREE.PerspectiveCamera(35, 1, .1, 50);
-    camera.position.set(3.6, 2.1, 7.6);
-    camera.lookAt(0, .15, 0);
+    camera.position.set(5.4, 3.9, 11.8);
+    camera.lookAt(0, 1, 0);
     const room = new RoomEnvironment();
     const pmrem = new THREE.PMREMGenerator(renderer);
     try {
@@ -142,13 +142,16 @@ async function initializeHero() {
       room.dispose();
       pmrem.dispose();
     }
-    const key = new THREE.DirectionalLight("#F5E1A4", 2.2);
-    key.position.set(-4, 6, 5);
+    const key = new THREE.DirectionalLight("#ffe0a5", 3.8);
+    key.position.set(-6, 9, 6);
     scene.add(key);
-    const fill = new THREE.DirectionalLight("#C1272D", 1.1);
+    const fill = new THREE.DirectionalLight("#d76b38", 1.5);
     fill.position.set(4, -2, 3);
     scene.add(fill);
-    scene.add(new THREE.HemisphereLight("#fff9ed", "#c3b9aa", 1.25));
+    const rim = new THREE.DirectionalLight("#ffb55c", 3);
+    rim.position.set(-5, 4, -5);
+    scene.add(rim);
+    scene.add(new THREE.HemisphereLight("#ffe4b9", "#4a1b10", 1.35));
 
     const canvasTexture = (paint, size = 512) => {
       const canvas = document.createElement("canvas");
@@ -162,78 +165,16 @@ async function initializeHero() {
       textures.add(texture);
       return texture;
     };
-    const sealTexture = canvasTexture((context, size) => {
-      context.fillStyle = "#9E2A25";
-      context.fillRect(0, 0, size, size);
-      context.strokeStyle = context.fillStyle = "#F4E3B5";
-      context.lineWidth = 10;
-      context.strokeRect(36, 36, size - 72, size - 72);
-      context.lineWidth = 2;
-      context.strokeRect(50, 50, size - 100, size - 100);
-      context.font = '600 188px "Noto Serif SC", "Songti SC", SimSun, serif';
-      context.textAlign = "center";
-      context.textBaseline = "middle";
-      context.fillText("红", size / 2, 157);
-      context.fillText("岩", size / 2, 356);
-    });
-    const physical = { metalness: .85, roughness: .25, clearcoat: .4, clearcoatRoughness: .2 };
-    const lacquer = new THREE.MeshPhysicalMaterial({ ...physical, color: "#9E2A25" });
-    const face = new THREE.MeshPhysicalMaterial({ ...physical, map: sealTexture });
-    const gold = new THREE.MeshPhysicalMaterial({ ...physical, color: "#BE9652" });
-    model = new THREE.Group();
-    model.rotation.set(.08, -.3, -.13);
-    const cube = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.8, 1.4), [lacquer, lacquer, lacquer, lacquer, face, lacquer]);
-    model.add(cube);
-    const rimGeometry = new THREE.BoxGeometry(1.63, .025, 1.43);
-    for (const y of [-.86, .86]) {
-      const rim = new THREE.Mesh(rimGeometry, gold);
-      rim.position.y = y;
-      model.add(rim);
-    }
-    const neck = new THREE.Mesh(new THREE.BoxGeometry(.65, .13, .58), lacquer);
-    neck.position.y = .97;
-    model.add(neck);
-    const handle = new THREE.Mesh(new THREE.TorusGeometry(.24, .075, 8, 32), gold);
-    handle.position.y = 1.24;
-    model.add(handle);
-    scene.add(model);
-
-    const plinth = new THREE.Mesh(new THREE.CylinderGeometry(1.65, 1.8, .16, 48), new THREE.MeshStandardMaterial({ color: "#ece6da", metalness: .08, roughness: .65 }));
-    plinth.position.y = -1.35;
-    scene.add(plinth);
-    const shadowMap = canvasTexture((context, size) => {
-      const gradient = context.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-      gradient.addColorStop(0, "rgba(65,38,28,.32)");
-      gradient.addColorStop(.4, "rgba(65,38,28,.12)");
-      gradient.addColorStop(1, "rgba(65,38,28,0)");
-      context.fillStyle = gradient;
-      context.fillRect(0, 0, size, size);
-    }, 128);
-    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(3.1, 3.1), new THREE.MeshBasicMaterial({ map: shadowMap, transparent: true, depthWrite: false }));
-    shadow.rotation.x = -Math.PI / 2;
-    shadow.position.y = -1.263;
-    scene.add(shadow);
-
-    beams = new THREE.Group();
-    // The blur is baked into the radial texture; no full-canvas CSS filter.
-    if (!smallScreen.matches && !weakDevice) {
-      const glowMap = canvasTexture((context, size) => {
-        const gradient = context.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-        gradient.addColorStop(0, "rgba(245,225,164,1)");
-        gradient.addColorStop(.3, "rgba(245,225,164,.4)");
-        gradient.addColorStop(1, "rgba(245,225,164,0)");
-        context.fillStyle = gradient;
-        context.fillRect(0, 0, size, size);
-      }, 128);
-      const glow = new THREE.MeshBasicMaterial({ map: glowMap, blending: THREE.AdditiveBlending, transparent: true, opacity: .15, depthWrite: false, side: THREE.DoubleSide, toneMapped: false });
-      for (const [x, angle] of [[-1, -.45], [1.25, .3]]) {
-        const beam = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 5.8), glow);
-        beam.position.set(x, .35, -1.5);
-        beam.rotation.z = angle;
-        beams.add(beam);
+    const monument = createHongyanMonument(THREE, { texture: canvasTexture, lowQuality: smallScreen.matches || weakDevice });
+    model = monument.model;
+    beams = monument.atmosphere;
+    model.traverse((node) => {
+      for (const material of Array.isArray(node.material) ? node.material : node.material ? [node.material] : []) {
+        if ('envMapIntensity' in material) material.envMapIntensity = .55;
       }
-    }
-    scene.add(beams);
+    });
+    scene.add(model, beams);
+    const framingDirection = new THREE.Vector3(5.4, 2.9, 11.8).normalize();
 
     const resize = () => {
       if (disposed || !mount.isConnected) return;
@@ -249,6 +190,9 @@ async function initializeHero() {
       renderer.setSize(width, height, false);
       beams.visible = !lowResolution;
       camera.aspect = width / height;
+      const distance = Math.max(8.3, 9.4 / camera.aspect) / (2 * Math.tan(THREE.MathUtils.degToRad(35 / 2)));
+      camera.position.copy(framingDirection).multiplyScalar(distance).add(new THREE.Vector3(0, 1, 0));
+      camera.lookAt(0, 1, 0);
       camera.clearViewOffset();
       camera.updateProjectionMatrix();
       draw();
@@ -288,7 +232,7 @@ async function initializeHero() {
       target.set(0, 0);
       offset.set(0, 0);
       camera.clearViewOffset();
-      model.rotation.set(.08, -.3, -.13);
+      model.rotation.set(0, -.12, 0);
       if (motion.matches) draw();
       else schedule();
     });
