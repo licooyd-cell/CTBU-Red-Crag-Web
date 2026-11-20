@@ -5,25 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="红岩青年创作档案，记录参赛者的作品、创作故事与青春表达。"
+      content="红岩铸魂-3D文创季，记录参赛者的作品、创作故事与青春表达。"
     />
     <meta name="theme-color" content="#8f2922" />
-    <title>红岩新声 · 青年创作档案</title>
+    <title>红岩铸魂-3D文创季</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&amp;family=DM+Mono:wght@400&amp;family=Noto+Sans+SC:wght@400;500&amp;family=Noto+Serif+SC:wght@400;600;700&amp;display=swap" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
     <script src="supabase-config.js"></script>
     <script src="data.js" defer></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
     <script type="module" src="app.js"></script>
+    <script type="module" src="hero-3d.js"></script>
   </head>
   <body>
     <div class="page-grain" aria-hidden="true"></div>
+    <div class="page-vignette" aria-hidden="true"></div>
+    <div class="page-bloom" aria-hidden="true"></div>
     <header class="site-header">
-      <a class="brand" href="./" aria-label="红岩新声首页">
+      <a class="brand" href="./" aria-label="红岩铸魂-3D文创季首页">
         <span class="brand-mark" aria-hidden="true">岩</span>
         <span class="brand-copy">
-          <strong>红岩新声</strong>
-          <small>青年创作档案</small>
+          <strong>红岩铸魂</strong>
+          <small>3D文创季</small>
         </span>
       </a>
       <nav class="site-nav" aria-label="主导航">
@@ -36,18 +50,19 @@
       </a>
     </header>
 
-    <main id="app">
+    <main>
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
           <p class="eyebrow"><span>2026</span><i></i> 青年作品线上展</p>
-          <h1 id="hero-title">让每一种<br /><em>青春表达</em>都有回响。</h1>
+          <h1 id="hero-title">让每一种<br /><em>青春表达</em><span class="hero-title-ending">都有回响。</span></h1>
           <p class="hero-description">
             从一件作品出发，读懂创作者的观察、热爱与故事。
             扫描专属二维码，与每一份真诚创作相遇。
           </p>
           <a class="text-link" href="#works">探索参赛作品 <span aria-hidden="true">↘</span></a>
         </div>
-        <div class="hero-art" aria-label="红岩与山城的剪影插画" role="img">
+        <div class="hero-art" aria-label="红岩朱印与山城意象，三维主题展陈" role="img">
+          <div class="hero-canvas-mount" aria-hidden="true"></div>
           <div class="hero-art-label"><span>RED ROCK</span><span>NO. 01 — 50</span></div>
           <div class="hero-stamp" aria-hidden="true">
             <span>山</span><span>城</span><span>有</span><span>声</span>
@@ -57,53 +72,55 @@
         <div class="hero-index" aria-hidden="true">01 / 03</div>
       </section>
 
-      <section class="intro-strip" id="about">
-        <span class="strip-index">展览手记&nbsp; / &nbsp;01</span>
-        <p>红岩，是一方精神的坐标。<br class="mobile-break" />而今天，故事由年轻的创作者继续书写。</p>
-        <span class="strip-aside">在作品里，遇见真实而鲜活的他们。</span>
-      </section>
+      <div id="app">
+        <section class="intro-strip" id="about">
+          <span class="strip-index">展览手记&nbsp; / &nbsp;01</span>
+          <p>红岩，是一方精神的坐标。<br class="mobile-break" />而今天，故事由年轻的创作者继续书写。</p>
+          <span class="strip-aside">在作品里，遇见真实而鲜活的他们。</span>
+        </section>
 
-      <section class="works-section" id="works">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow section-eyebrow">THE COLLECTION <span>—</span> 作品档案</p>
-            <h2>每一件作品，<em>都是一段出发。</em></h2>
+        <section class="works-section" id="works">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow section-eyebrow">THE COLLECTION <span>—</span> 作品档案</p>
+              <h2>每一件作品，<em>都是一段出发。</em></h2>
+            </div>
+            <p class="section-count"><strong id="participant-count">00</strong><span>位创作者</span></p>
           </div>
-          <p class="section-count"><strong id="participant-count">00</strong><span>位创作者</span></p>
-        </div>
 
-        <div class="collection-toolbar">
-          <div class="filter-list" id="filters" role="group" aria-label="按作品类别筛选"></div>
-          <label class="search-box">
-            <span class="search-icon" aria-hidden="true">⌕</span>
-            <span class="visually-hidden">搜索参赛者或作品</span>
-            <input id="search" type="search" placeholder="搜索姓名、作品…" autocomplete="off" />
-            <kbd>/</kbd>
-          </label>
-        </div>
+          <div class="collection-toolbar">
+            <div class="filter-list" id="filters" role="group" aria-label="按作品类别筛选"></div>
+            <label class="search-box">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <span class="visually-hidden">搜索参赛者或作品</span>
+              <input id="search" type="search" placeholder="搜索姓名、作品…" autocomplete="off" />
+              <kbd>/</kbd>
+            </label>
+          </div>
 
-        <p class="sample-notice">当前内容为演示示例，正式上线前请在 <code>data.js</code> 中替换为实际参赛资料。</p>
-        <div class="results-note" id="results-note" aria-live="polite"></div>
-        <div class="works-grid" id="works-grid"></div>
-        <div class="empty-state" id="empty-state" hidden>
-          <span aria-hidden="true">⌕</span>
-          <p>没有找到符合条件的作品</p>
-          <button type="button" class="text-link" data-action="reset-filters">清除筛选</button>
-        </div>
-      </section>
+          <p class="sample-notice">当前内容为演示示例，正式上线前请在 <code>data.js</code> 中替换为实际参赛资料。</p>
+          <div class="results-note" id="results-note" aria-live="polite"></div>
+          <div class="works-grid" id="works-grid"></div>
+          <div class="empty-state" id="empty-state" hidden>
+            <span aria-hidden="true">⌕</span>
+            <p>没有找到符合条件的作品</p>
+            <button type="button" class="text-link" data-action="reset-filters">清除筛选</button>
+          </div>
+        </section>
 
-      <section class="closing-note">
-        <span class="closing-mark" aria-hidden="true">“</span>
-        <p>作品的终点不是展墙，<br />而是另一个人心里的<span>回声。</span></p>
-        <span class="closing-rule"></span>
-        <small>红岩新声 · 青年作品线上展</small>
-      </section>
+        <section class="closing-note">
+          <span class="closing-mark" aria-hidden="true">“</span>
+          <p>作品的终点不是展墙，<br />而是另一个人心里的<span>回声。</span></p>
+          <span class="closing-rule"></span>
+          <small>红岩铸魂-3D文创季</small>
+        </section>
+      </div>
     </main>
 
     <footer class="site-footer">
-      <a class="brand footer-brand" href="./">
+      <a class="brand footer-brand" href="./" aria-label="红岩铸魂-3D文创季首页">
         <span class="brand-mark" aria-hidden="true">岩</span>
-        <span class="brand-copy"><strong>红岩新声</strong><small>青年创作档案</small></span>
+        <span class="brand-copy"><strong>红岩铸魂</strong><small>3D文创季</small></span>
       </a>
       <span class="footer-center">让故事被看见，让创作有回响。</span>
       <span class="footer-year">重庆 · 2026</span>
@@ -126,7 +143,7 @@
     <dialog class="entry-dialog" id="entry-dialog" aria-labelledby="entry-title">
       <div class="entry-dialog-content">
         <p class="eyebrow">WELCOME TO HONGYAN</p>
-        <h2 id="entry-title">欢迎进入红岩新声</h2>
+        <h2 id="entry-title">欢迎进入红岩铸魂-3D文创季</h2>
         <p class="entry-intro" id="entry-intro">请选择访问方式，开始浏览青年创作。</p>
 
         <div class="entry-choices" id="entry-choices">

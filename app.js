@@ -308,7 +308,7 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
   };
 
   const renderHome = () => {
-    document.title = "红岩新声 · 青年创作档案";
+    document.title = "红岩铸魂-3D文创季";
     document.body.classList.remove("is-detail");
     app.classList.remove("detail-view");
     document.querySelector(".sample-notice").hidden = isSupabaseConfigured();
@@ -322,7 +322,7 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
   };
 
   const renderDetail = (person) => {
-    document.title = `${person.name} · ${person.title} — 红岩新声`;
+    document.title = `${person.name} · ${person.title} — 红岩铸魂-3D文创季`;
     document.body.classList.add("is-detail");
     app.classList.add("detail-view");
     app.innerHTML = `
@@ -342,7 +342,7 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
         <div class="story-heading"><p class="eyebrow">BEHIND THE WORK <span>—</span> 创作手记</p><h2>每个故事，<br /><em>都从生活开始。</em></h2><button class="button button-outline" type="button" data-action="qr" data-id="${escapeHtml(person.id)}">查看专属二维码 <span aria-hidden="true">▦</span></button></div>
         <div class="story-content"><p class="story-lead">${escapeHtml(person.bio)}</p><span class="story-divider"></span><p>${escapeHtml(person.story)}</p><div class="story-signature"><span>创作者</span><strong>${escapeHtml(person.name)}</strong></div></div>
       </section>
-      <section class="detail-footer"><a href="./" class="text-link"><span aria-hidden="true">←</span> 返回全部作品</a><span>RED ROCK · YOUTH CREATIVE ARCHIVE</span><button class="text-link share-link" type="button" data-action="copy" data-id="${escapeHtml(person.id)}">复制作品链接 <span aria-hidden="true">↗</span></button></section>`;
+      <section class="detail-footer"><a href="./" class="text-link"><span aria-hidden="true">←</span> 返回全部作品</a><span>红岩铸魂-3D文创季</span><button class="text-link share-link" type="button" data-action="copy" data-id="${escapeHtml(person.id)}">复制作品链接 <span aria-hidden="true">↗</span></button></section>`;
     preparePhotoReveal(app);
     prepareElasticText(document);
   };
