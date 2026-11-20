@@ -17,9 +17,82 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
   const entryIntro = document.getElementById("entry-intro");
   const entryAdminSubmit = document.getElementById("entry-admin-submit");
   const entryRoleKey = "hongyan-entry-role";
+  const ratingStorageKey = "hongyan-work-ratings-v1";
+  const ratingLabels = ["不太喜欢", "一般", "不错", "很喜欢", "非常喜欢"];
+  let ratings = {};
   let authClient;
   let selectedCategory = "全部作品";
   let toastTimer;
+
+  try {
+    const storedRatings = JSON.parse(window.localStorage.getItem(ratingStorageKey) || "{}");
+    if (storedRatings && typeof storedRatings === "object") ratings = storedRatings;
+  } catch (error) {
+    ratings = {};
+  }
+
+  const getRating = (personId) => {
+    const value = Number(ratings[personId]);
+    return Number.isInteger(value) && value >= 0 && value <= 5 ? value : 0;
+  };
+
+  const saveRating = (personId, value) => {
+    ratings[personId] = value;
+    try {
+      window.localStorage.setItem(ratingStorageKey, JSON.stringify(ratings));
+    } catch (error) {
+      // Keep the current-page rating usable when storage is unavailable.
+    }
+  };
+
+  const renderRating = (person, variant = "card") => {
+    const value = getRating(person.id);
+    const stars = Array.from({ length: 5 }, (_, index) => {
+      const score = index + 1;
+      return `<button class="peek-rating__star${score <= value ? " is-lit" : ""}" type="button" role="radio" data-rating-value="${score}" aria-label="${score} 分：${ratingLabels[index]}" aria-checked="${score === value}"><span aria-hidden="true">★</span></button>`;
+    }).join("");
+    return `<div class="peek-rating peek-rating-${variant}" data-rating-id="${escapeHtml(person.id)}" data-rating-value="${value}" aria-label="为 ${escapeHtml(person.name)} 的作品评分">
+      <span class="peek-rating__label">我的评分</span>
+      <div class="peek-rating__row" role="radiogroup">${stars}</div>
+      <span class="peek-rating__tip" data-show="false" aria-hidden="true"></span>
+    </div>`;
+  };
+
+  const paintRating = (control, preview = null) => {
+    if (!control) return;
+    const value = getRating(control.dataset.ratingId);
+    const shown = preview === null ? value : preview;
+    control.dataset.preview = preview === null ? "" : String(preview);
+    control.dataset.ratingValue = String(value);
+    control.querySelectorAll(".peek-rating__star").forEach((star, index) => {
+      const active = index < shown;
+      star.classList.toggle("is-lit", active);
+      star.classList.toggle("is-preview", preview !== null && active);
+      star.setAttribute("aria-checked", String(index + 1 === value));
+    });
+    const tip = control.querySelector(".peek-rating__tip");
+    if (tip) {
+      tip.textContent = preview === null || preview === 0 ? "" : ratingLabels[preview - 1];
+      tip.dataset.show = preview === null || preview === 0 ? "false" : "true";
+    }
+  };
+
+  const refreshRatings = (personId) => {
+    document.querySelectorAll(".peek-rating").forEach((control) => {
+      if (control.dataset.ratingId === personId) paintRating(control);
+    });
+  };
+
+  const handleRatingClick = (button) => {
+    const control = button.closest(".peek-rating");
+    if (!control) return;
+    const personId = control.dataset.ratingId;
+    const next = Number(button.dataset.ratingValue);
+    const current = getRating(personId);
+    saveRating(personId, next === current ? 0 : next);
+    refreshRatings(personId);
+    showToast(next === current ? "已取消评分" : `已记录 ${next} 分`);
+  };
 
   const preparePhotoReveal = (root) => {
     root.querySelectorAll("img[data-photo-reveal]").forEach((image) => {
@@ -32,6 +105,41 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
       }
     });
   };
+
+  const prepareElasticText = (root = document) => {
+    root.querySelectorAll(".site-header a, .site-nav a, .header-note, .text-link, .card-link, .footer-year, .brand, .button, .filter-chip, .entry-choice, .entry-back, .qr-mini, .detail-breadcrumb a, .detail-footer a").forEach((element) => {
+      element.classList.add("elastic-click");
+      element.setAttribute("data-elastic-click", "true");
+    });
+  };
+
+  const triggerElasticText = (element) => {
+    if (!element) return;
+    element.classList.remove("is-elastic-pressed");
+    window.requestAnimationFrame(() => element.classList.add("is-elastic-pressed"));
+  };
+
+  const triggerPhotoReplay = (target) => {
+    const image = target?.querySelector("img");
+    if (!image) return;
+    image.classList.remove("is-photo-clicked");
+    window.requestAnimationFrame(() => image.classList.add("is-photo-clicked"));
+  };
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!(event.target instanceof Element)) return;
+    triggerElasticText(event.target.closest("[data-elastic-click]"));
+    triggerPhotoReplay(event.target.closest(".photo-click-target"));
+  });
+  document.addEventListener("keydown", (event) => {
+    const target = event.target instanceof Element ? event.target.closest("[data-elastic-click]") : null;
+    if (!((event.key === "Enter" || event.key === " ") && target)) return;
+    triggerElasticText(target);
+  });
+  document.addEventListener("animationend", (event) => {
+    if (event.animationName === "elastic-text-click") event.target.classList.remove("is-elastic-pressed");
+    if (event.animationName === "photo-click-replay") event.target.classList.remove("is-photo-clicked");
+  });
 
   const setEntryMessage = (message) => {
     if (entryMessage) entryMessage.textContent = message;
@@ -172,7 +280,7 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
       .map(
         (person, index) => `
           <article class="work-card">
-            <a class="card-art ${escapeHtml(person.accent)}" style="--reveal-delay:${index * 90}ms" href="?id=${encodeURIComponent(person.id)}" aria-label="查看 ${escapeHtml(person.name)} 的作品：${escapeHtml(person.title)}">
+            <a class="card-art photo-click-target ${escapeHtml(person.accent)}" style="--reveal-delay:${index * 90}ms" href="?id=${encodeURIComponent(person.id)}" aria-label="查看 ${escapeHtml(person.name)} 的作品：${escapeHtml(person.title)}">
               <img data-photo-reveal src="${escapeHtml(person.cover)}" alt="${escapeHtml(person.title)}作品插画" loading="lazy" />
               <span class="card-number">${String(index + 1).padStart(2, "0")} <i>/</i> ${String(participants.length).padStart(2, "0")}</span>
               <span class="card-category">${escapeHtml(person.category)}</span>
@@ -184,6 +292,7 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
                 <button class="qr-mini" type="button" data-action="qr" data-id="${escapeHtml(person.id)}" aria-label="查看${escapeHtml(person.name)}的专属二维码" title="专属二维码">▦</button>
               </div>
               <h4>${escapeHtml(person.title)}</h4>
+              ${renderRating(person)}
               <p class="card-description">${escapeHtml(person.description)}</p>
               <a class="card-link" href="?id=${encodeURIComponent(person.id)}">走进作品 <span aria-hidden="true">↗</span></a>
             </div>
@@ -192,6 +301,7 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
       .join("");
 
     preparePhotoReveal(grid);
+    prepareElasticText(document);
 
     resultsNote.textContent = query || selectedCategory !== "全部作品" ? `找到 ${visible.length} 件作品` : "";
     emptyState.hidden = visible.length > 0;
@@ -224,8 +334,9 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
           <h1>${escapeHtml(person.title)}</h1>
           <p class="detail-description">${escapeHtml(person.description)}</p>
           <div class="detail-meta"><span class="avatar ${escapeHtml(person.accent)}" aria-hidden="true">${escapeHtml(person.name.slice(0, 1))}</span><div><strong>${escapeHtml(person.name)}</strong><span>${escapeHtml(person.department)}　·　${escapeHtml(person.studentId)}</span></div></div>
+          ${renderRating(person, "detail")}
         </div>
-        <div class="detail-art ${escapeHtml(person.accent)}"><img data-photo-reveal src="${escapeHtml(person.cover)}" alt="${escapeHtml(person.title)}作品插画" /><span class="detail-art-label">SELECTED WORK <i>✳</i></span></div>
+        <div class="detail-art photo-click-target ${escapeHtml(person.accent)}"><img data-photo-reveal src="${escapeHtml(person.cover)}" alt="${escapeHtml(person.title)}作品插画" /><span class="detail-art-label">SELECTED WORK <i>✳</i></span></div>
       </section>
       <section class="story-section">
         <div class="story-heading"><p class="eyebrow">BEHIND THE WORK <span>—</span> 创作手记</p><h2>每个故事，<br /><em>都从生活开始。</em></h2><button class="button button-outline" type="button" data-action="qr" data-id="${escapeHtml(person.id)}">查看专属二维码 <span aria-hidden="true">▦</span></button></div>
@@ -233,6 +344,7 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
       </section>
       <section class="detail-footer"><a href="./" class="text-link"><span aria-hidden="true">←</span> 返回全部作品</a><span>RED ROCK · YOUTH CREATIVE ARCHIVE</span><button class="text-link share-link" type="button" data-action="copy" data-id="${escapeHtml(person.id)}">复制作品链接 <span aria-hidden="true">↗</span></button></section>`;
     preparePhotoReveal(app);
+    prepareElasticText(document);
   };
 
   const showToast = (message) => {
@@ -286,6 +398,13 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
   };
 
   document.addEventListener("click", (event) => {
+    const ratingButton = event.target.closest(".peek-rating__star");
+    if (ratingButton) {
+      event.preventDefault();
+      handleRatingClick(ratingButton);
+      return;
+    }
+
     const button = event.target.closest("[data-action]");
     if (button) {
       const action = button.dataset.action;
@@ -309,6 +428,39 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
       selectedCategory = chip.dataset.category;
       renderFilters();
       renderCards();
+    }
+  });
+
+  document.addEventListener("pointerover", (event) => {
+    const ratingButton = event.target.closest(".peek-rating__star");
+    if (!ratingButton || event.pointerType !== "mouse") return;
+    const control = ratingButton.closest(".peek-rating");
+    if (control) paintRating(control, Number(ratingButton.dataset.ratingValue));
+  });
+
+  document.addEventListener("pointerout", (event) => {
+    const control = event.target.closest(".peek-rating");
+    if (!control || (event.relatedTarget instanceof Element && control.contains(event.relatedTarget))) return;
+    paintRating(control);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    const ratingButton = event.target.closest?.(".peek-rating__star");
+    if (!ratingButton) return;
+    const control = ratingButton.closest(".peek-rating");
+    const stars = [...control.querySelectorAll(".peek-rating__star")];
+    const currentIndex = stars.indexOf(ratingButton);
+    if (event.key === "ArrowRight" || event.key === "ArrowUp") {
+      event.preventDefault();
+      stars[Math.min(stars.length - 1, currentIndex + 1)]?.focus();
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowDown") {
+      event.preventDefault();
+      stars[Math.max(0, currentIndex - 1)]?.focus();
+    } else if (event.key === "Backspace" || event.key === "Delete") {
+      event.preventDefault();
+      saveRating(control.dataset.ratingId, 0);
+      refreshRatings(control.dataset.ratingId);
+      showToast("已取消评分");
     }
   });
 
@@ -352,5 +504,6 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
   };
 
   setupEntryGate();
+  prepareElasticText();
   void initialize();
 })();
