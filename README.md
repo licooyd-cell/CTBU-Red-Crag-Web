@@ -16,6 +16,23 @@ python -m http.server 8000
 
 ## Supabase 管理后台配置
 
+## 通过终端同步本地内容
+
+`data.js` 中的内容可以通过脚本上传到 Supabase Storage，并写入 `public.participants`。脚本默认只预览，不会修改远程数据。
+
+在 PowerShell 中执行：
+
+```powershell
+node scripts/sync-data-to-supabase.mjs
+
+$env:SUPABASE_SERVICE_ROLE_KEY = "在本机终端粘贴 service_role key"
+node scripts/sync-data-to-supabase.mjs --apply
+```
+
+`SUPABASE_SERVICE_ROLE_KEY` 只在当前终端会话中使用，不要写入 `supabase-config.js`、前端代码或 Git。重复执行会按 `id` 更新已有记录，不会删除其他记录。脚本会把 `data.js` 中的本地封面上传到 `artworks` 存储桶，并将公开访问地址写入 `cover` 字段。
+
+首次使用或需要同步 SVG 封面时，先在 Supabase SQL Editor 执行更新后的 [`supabase/schema.sql`](./supabase/schema.sql)，再运行上面的 `--apply` 命令。
+
 ### 1. 创建 Supabase 项目和数据表
 
 1. 在 [Supabase](https://supabase.com/) 创建一个项目。

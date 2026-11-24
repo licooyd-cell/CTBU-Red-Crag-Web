@@ -196,15 +196,15 @@ const uploadCover = async (personId, file) => {
   if (!(file instanceof File) || file.size === 0) {
     throw new Error("请选择一张作品封面。");
   }
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"];
   if (!allowedTypes.includes(file.type)) {
-    throw new Error("封面仅支持 JPG、PNG 或 WebP 图片。");
+    throw new Error("封面仅支持 JPG、PNG、WebP 或 SVG 图片。");
   }
   if (file.size > 10 * 1024 * 1024) {
     throw new Error("封面图片不能超过 10 MB。");
   }
 
-  const extensions = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
+  const extensions = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/svg+xml": "svg" };
   const path = `${personId}/${crypto.randomUUID()}.${extensions[file.type]}`;
   const { error } = await supabase.storage.from("artworks").upload(path, file, {
     cacheControl: "3600",

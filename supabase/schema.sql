@@ -97,7 +97,7 @@ to authenticated
 using (user_id = (select auth.uid()));
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('artworks', 'artworks', true, 10485760, array['image/jpeg', 'image/png', 'image/webp'])
+values ('artworks', 'artworks', true, 10485760, array['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'])
 on conflict (id) do update
 set public = excluded.public,
     file_size_limit = excluded.file_size_limit,

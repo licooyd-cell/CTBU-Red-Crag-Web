@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="admin.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&amp;family=DM+Mono:wght@400&amp;family=Noto+Sans+SC:wght@400;500&amp;family=Noto+Serif+SC:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&amp;family=Manrope:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;family=Noto+Serif+SC:wght@400;600;700&amp;display=swap" rel="stylesheet" />
     <script src="supabase-config.js"></script>
     <script type="module" src="admin.js"></script>
   </head>
@@ -91,8 +91,8 @@
               <option value="moss">苔绿</option>
             </select>
           </label>
-          <label>作品封面（JPG / PNG / WebP，最大 10 MB）
-            <input name="coverFile" type="file" accept="image/jpeg,image/png,image/webp" />
+          <label>作品封面（JPG / PNG / WebP / SVG，最大 10 MB）
+            <input name="coverFile" type="file" accept="image/jpeg,image/png,image/webp,image/svg+xml" />
           </label>
           <div class="cover-preview form-wide" id="cover-preview" hidden></div>
         </div>

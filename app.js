@@ -231,6 +231,31 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
     entryDialog.showModal();
   };
 
+  const setupTaglineReveal = () => {
+    const section = document.querySelector(".tagline-reveal");
+    if (!section) return;
+    const words = [...section.querySelectorAll(".tagline-reveal-word")];
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      words.forEach((word) => word.classList.add("is-visible"));
+      return;
+    }
+    if (!("IntersectionObserver" in window)) {
+      words.forEach((word) => word.classList.add("is-visible"));
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        words.forEach((word, index) => {
+          window.setTimeout(() => word.classList.add("is-visible"), index * 140);
+        });
+        observer.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(section);
+  };
+
   document.getElementById("guest-entry")?.addEventListener("click", () => {
     rememberEntryRole("guest");
     entryDialog.close();
@@ -504,6 +529,7 @@ import { createSupabaseClient, fetchParticipants, isSupabaseConfigured } from ".
   };
 
   setupEntryGate();
+  setupTaglineReveal();
   prepareElasticText();
   void initialize();
 })();
